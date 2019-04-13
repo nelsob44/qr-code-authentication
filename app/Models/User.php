@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Notifications\Notifiable;
 use Eloquent as Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -19,10 +20,10 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  */
 class User extends Model
 {
-    use SoftDeletes;
+    use SoftDeletes, Notifiable;
 
     public $table = 'users';
-    
+
     const CREATED_AT = 'created_at';
     const UPDATED_AT = 'updated_at';
 
@@ -59,7 +60,7 @@ class User extends Model
      * @var array
      */
     public static $rules = [
-        
+
     ];
 
     public function transactions()
@@ -86,5 +87,5 @@ class User extends Model
     {
         return $this->hasOne('App\Models\Account');
     }
-    
+
 }

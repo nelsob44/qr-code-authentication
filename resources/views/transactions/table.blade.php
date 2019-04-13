@@ -6,7 +6,7 @@
         <th>Method</th>
         <th>Amount</th>
         <th>Status</th>
-            
+
         </tr>
     </thead>
     <tbody>
@@ -16,12 +16,15 @@
                 <a href="{!! route('transactions.show', [$transaction->id]) !!}">
                     {!! $transaction->qrcode['product_name'] !!}
                 </a>
+            <small>| {{ $transaction->created_at->format('D d, M, Y h:i') }}</small>
             </td>
             <td>{!! $transaction->user['name'] !!}</td>
             <td>{!! $transaction->payment_method !!}</td>
             <td>£{!! $transaction->amount !!}</td>
-            <td>{!! $transaction->status !!}</td>
-            
+            <td>{!! $transaction->status !!} <br>
+                <small> {{ $transaction->updated_at->format('D d, M, Y h:i') }}</small>
+            </td>
+
         </tr>
     @endforeach
     </tbody>

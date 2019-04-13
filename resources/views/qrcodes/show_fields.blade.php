@@ -35,7 +35,7 @@
                 <a href="{!! $qrcode->website !!}" target="_blank">{!! $qrcode->website !!}</a>
             </p>
         </div>
-        
+
         <!-- Callback Url Field -->
         <div class="form-group">
             {!! Form::label('callback_url', 'Callback Url:') !!}
@@ -80,41 +80,29 @@
     <!-- Qrcode Path Field -->
     <div class="form-group">
         {!! Form::label('qrcode_path', 'Scan QRcode and pay with App') !!}
-        
-    <p><img src="{{asset($qrcode->qrcode_path)}}"></p>
+
+        <p><img src="{{ asset($qrcode->qrcode_path) }}"></p>
     </div>
 
-    <form method="POST" action="{{ route('pay') }}" accept-charset="UTF-8" class="form-horizontal" role="form">
-            <div class="row" style="margin-bottom:40px;">
-              <div class="col-md-8 col-md-offset-2">
-                <p>
-                    <div>
-                        Lagos Eyo Print Tee Shirt
-                        ₦ 2,950
-                    </div>
-                </p>
-                <input type="hidden" name="email" value="nelsob44@gmail.com"> 
-                <input type="hidden" name="orderID" value="{{ $qrcode->id }}">
-                <input type="hidden" name="amount" value="150000"> {{--{{ $qrcode->amount }}--}}
-                <input type="hidden" name="quantity" value="1">
-                @if(!Auth::guest())
-                <input type="hidden" name="metadata" value="{{ json_encode($array = ['buyer_user_id' => Auth::user()->id,]) }}" > {{-- For other necessary things you want to add to your payload. it is optional though --}}
+        <form method="post" role="form" class="col-md-6" action="{{ route('qrcodes.show_payment_page') }}">
+            <div class="form-group">
+                @if(Auth::guest())
+                <label for="email">Enter your email </label>
+                    <input type="email" name="email" id="email" required placeholder="abcdef@gmail.com" class="form-control">
+                @else
+                    <input type="hidden" name="email" value="{{ Auth::user()->email }}">
                 @endif
-                <input type="hidden" name="reference" value="{{ Paystack::genTranxRef() }}"> {{-- required --}}
-                <input type="hidden" name="key" value="{{ config('paystack.secretKey') }}"> {{-- required --}}
-                {{ csrf_field() }} {{-- works only when using laravel 5.1, 5.2 --}}
-    
-                <input type="hidden" name="_token" value="{{ csrf_token() }}"> {{-- employ this in place of csrf_field only in laravel 5.0 --}}
-    
-    
-                <p>
-                  <button class="btn btn-success btn-lg btn-block" type="submit" value="Pay Now!">
-                  <i class="fa fa-plus-circle fa-lg"></i> Pay Now!
-                  </button>
+                {{ csrf_field() }}
+                <input type="hidden" name="qrcode_id" value="{{ $qrcode->id }}">
+                <p style="margin-top:5px;">
+                <button class="btn btn-success btn-lg" type="submit" value="Pay Now!">
+                <i class="fa fa-plus-circle fa-lg"></i> Pay Now!
+                </button>
                 </p>
-              </div>
+
             </div>
-    </form>
+        </form>
+
 </div>
 
 @if(!Auth::guest() && ($qrcode->user_id == Auth::user()->id || Auth::user()->role_id < 3))

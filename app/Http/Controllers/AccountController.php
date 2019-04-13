@@ -78,11 +78,11 @@ class AccountController extends AppBaseController
     {
         if(!isset($id)){
             $account = Account::where('user_id', Auth::user()->id)->first();
-            
+
         }else{
             $account = $this->accountRepository->findWithoutFail($id);
         }
-        
+
         if (empty($account)) {
             Flash::error('Account not found');
 
@@ -173,7 +173,7 @@ class AccountController extends AppBaseController
         //redirect and display success message
 
         $input = $request->input('apply_for_payout');
-        
+
         $account = $this->accountRepository->findWithoutFail($input);
 
         if (empty($account)) {
@@ -193,7 +193,7 @@ class AccountController extends AppBaseController
         Account::where('id', $account->id)->update([
             'applied_for_payout' => 1,
             'paid'=> 0,
-            'last_date_applied' => date()
+            'last_date_applied' => date('D-m-Y H:i:s', time())
         ]);
 
         AccountHistory::create([
@@ -216,7 +216,7 @@ class AccountController extends AppBaseController
         //update account history
         //redirect and display success message
         $input = $request->input('mark_as_paid');
-        
+
         $account = $this->accountRepository->findWithoutFail($input);
 
         if (empty($account)) {
@@ -236,7 +236,7 @@ class AccountController extends AppBaseController
         Account::where('id', $account->id)->update([
             'applied_for_payout' => 0,
             'paid'=> 1,
-            'last_date_paid' => date()
+            'last_date_paid' => date('D-m-Y H:i:s', time())
         ]);
 
         AccountHistory::create([

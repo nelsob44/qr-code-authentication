@@ -1,6 +1,7 @@
 <?php
 
 use Faker\Generator as Faker;
+use Illuminate\Support\Facades\Hash;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,12 +14,17 @@ use Faker\Generator as Faker;
 |
 */
 
-$factory->define(App\User::class, function (Faker $faker) {
+
+$factory->define(App\Models\User::class, function (Faker $faker) {
+    $hashedPassword = Hash::make('secret');
+    $rememberToken = str_random(10);
     return [
         'name' => $faker->name,
         'email' => $faker->unique()->safeEmail,
         'email_verified_at' => now(),
-        'password' => '$2y$10$TKh8H1.PfQx37YgCzwiKb.KjNyWgaHb9cbcoQgdIVFlYg7B77UdFm', // secret
-        'remember_token' => str_random(10),
+        'password' => $hashedPassword, // secret
+        'role_id' => rand(1, 4),
+        'remember_token' => $rememberToken,
+
     ];
 });

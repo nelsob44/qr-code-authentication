@@ -24,12 +24,16 @@ Route::group(['middleware'=>'auth'], function(){
 
 // Route::get('/home', 'HomeController@index');
 
+    Route::get('/users/api', function(){
+        return view('users.token');
+    })->name('users.api');
+
     Route::resource('qrcodes', 'QrcodeController')->except(['show']);
 
     Route::resource('roles', 'RoleController')->middleware('checkAdmin');
 
     Route::resource('transactions', 'TransactionController');
-    
+
     Route::resource('users', 'UserController');
 
     Route::group(['middleware' => 'checkmoderator'], function(){
@@ -39,7 +43,7 @@ Route::group(['middleware'=>'auth'], function(){
     Route::resource('accounts', 'AccountController')->except(['show']);
     Route::get('/accounts/show/{id?}', 'AccountController@show')->name('accounts.show');
 
-    Route::resource('accountHistories', 'AccountHistoryController');    
+    Route::resource('accountHistories', 'AccountHistoryController');
 
     Route::post('/accounts/apply_for_payout', 'AccountController@apply_for_payout')->name('accounts.apply_for_payout');
     Route::post('/accounts/mark_as_paid', 'AccountController@mark_as_paid')
@@ -58,8 +62,15 @@ Route::group(['middleware'=>'auth'], function(){
     ->middleware('checkAdmin');
 });
 
+//Routes accessible without logging in
+
 Route::get('/qrcodes/{id}', 'QrcodeController@show')->name('qrcodes.show');
 
-Route::post('/pay', 'PaymentController@redirectToGateway')->name('pay'); 
+Route::post('/pay', 'PaymentController@redirectToGateway')->name('pay');
 
 Route::get('/payment/callback', 'PaymentController@handleGatewayCallback');
+
+Route::post('/qrcodes/show_payment_page', 'QrcodeController@show_payment_page')->name('qrcodes.show_payment_page');
+
+Route::get('/transactions/{id}', 'TransactionController@show')->name('transactions.show');
+
