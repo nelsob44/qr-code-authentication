@@ -122,7 +122,7 @@ class QrcodeController extends AppBaseController
 
         $file = 'generated_qrcodes/'.$qrcode->id.'.png';
 
-        $newQrcode = QRCode::text('qrcodes.show', $qrcode->id))
+        $newQrcode = QRCode::text('qrcodes.show', $qrcode->id)
         ->setSize(6)
         ->setMargin(2)
         ->setOutfile($file)
